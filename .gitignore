@@ -1,0 +1,26 @@
+# 1. Python 缓存（这些是运行产生的垃圾，不能传）
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 2. 虚拟环境（如果在这个目录下建的话）
+venv/
+env/
+.conda/
+
+# 3. Isaac / RL 运行日志与模型权重（极其重要！！！）
+# 绝对不要把几个 G 的 Checkpoint 推上 GitHub！
+logs/
+runs/
+*.pth
+*.pt
+*.onnx
+*.engine
+
+# 4. 操作系统垃圾
+.DS_Store
+Thumbs.db
+
+# 5. IDE 配置文件
+.vscode/
+.idea/
