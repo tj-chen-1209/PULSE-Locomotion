@@ -10,6 +10,7 @@ env/
 
 # 3. Isaac / RL 运行日志与模型权重（极其重要！！！）
 # 绝对不要把几个 G 的 Checkpoint 推上 GitHub！
+outputs/
 logs/
 runs/
 *.pth

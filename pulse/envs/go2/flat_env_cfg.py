@@ -8,14 +8,44 @@ from isaaclab_tasks.manager_based.locomotion.velocity.config.go2.flat_env_cfg im
 class Go2PulseFlatEnvCfg(UnitreeGo2FlatEnvCfg):
     def __post_init__(self):
         super().__post_init__()
-        # FIXME:TRAIN CFG
 
-        # 这里写你自己的修改
+        # 砍掉不需要的地形和感知
+        self.scene.height_scanner = None
+        self.observations.policy.height_scan = None
+        self.curriculum.terrain_levels = None
 
-        # 奖励可以按需改
-        # self.rewards.feet_air_time.weight = 0.25
-        # self.rewards.track_lin_vel_xy_exp.weight = 1.5
+        # ==========================================
+        # 📊 监控中心 (Logging & Stats)
+        # 核心思想：利用权重为 0.0 的 Reward 充当日志探头
+        # 这样它们的数据会原封不动地出现在 Tensorboard 里，但不会干扰梯度更新！
+        # ==========================================
+        from isaaclab.managers import RewardTermCfg, SceneEntityCfg
+        import isaaclab_tasks.manager_based.locomotion.velocity.mdp as mdp
 
+        # 1. 监控：每回合摔倒的次数 (Termination Reason)
+        self.rewards.log_base_contact = RewardTermCfg(
+            func=mdp.illegal_contact, 
+            weight=0.0, 
+            params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names="base"), "threshold": 1.0}
+        )
+
+        # 2. 监控：动作剧烈程度 (Action Stats)
+        self.rewards.log_action_rate = RewardTermCfg(
+            func=mdp.action_rate_l2, 
+            weight=0.0, 
+        )
+
+        # 3. 监控：实际产生的关节加速度大小 (Joint Acc)
+        self.rewards.log_joint_acc = RewardTermCfg(
+            func=mdp.joint_acc_l2,
+            weight=0.0,
+        )
+        
+        # 4. 监控：关节是否逼近极限位置
+        self.rewards.log_joint_limits = RewardTermCfg(
+            func=mdp.joint_pos_limits,
+            weight=0.0,
+        )
 
 class Go2PulseFlatEnvCfg_PLAY(UnitreeGo2FlatEnvCfg_PLAY):
     def __post_init__(self):
