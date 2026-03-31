@@ -187,6 +187,10 @@ def _play_main() -> None:
     parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
     parser.add_argument("--use_pretrained_checkpoint", action="store_true", help="Use the pre-trained checkpoint from Nucleus.")
     parser.add_argument("--real-time", action="store_true", default=False, help="Run in real-time, if possible.")
+    # Fixed-command overrides: pin velocity commands to a single value instead of random sampling.
+    parser.add_argument("--fixed_vx", type=float, default=None, help="Fix linear x velocity command (m/s).")
+    parser.add_argument("--fixed_vy", type=float, default=None, help="Fix linear y velocity command (m/s).")
+    parser.add_argument("--fixed_yaw", type=float, default=None, help="Fix yaw rate command (rad/s).")
     cli_args.add_rsl_rl_args(parser)
     args_cli, _app_launcher, simulation_app = _parse_and_launch_app(parser)
     installed_version = metadata.version("rsl-rl-lib")
@@ -218,6 +222,20 @@ def _play_main() -> None:
         agent_cfg = handle_deprecated_rsl_rl_cfg(agent_cfg, installed_version)
         env_cfg.seed = agent_cfg.seed
         env_cfg.sim.device = args_cli.device if args_cli.device is not None else env_cfg.sim.device
+
+        # Pin velocity commands to fixed values when --fixed_vx/vy/yaw are supplied.
+        # Collapse each range to a zero-width interval so the sampler always returns the same value.
+        # Also disable heading_command so ang_vel_z is used directly as yaw rate.
+        if args_cli.fixed_vx is not None or args_cli.fixed_vy is not None or args_cli.fixed_yaw is not None:
+            cmd = env_cfg.commands.base_velocity
+            cmd.heading_command = False
+            vx = args_cli.fixed_vx if args_cli.fixed_vx is not None else 0.0
+            vy = args_cli.fixed_vy if args_cli.fixed_vy is not None else 0.0
+            yaw = args_cli.fixed_yaw if args_cli.fixed_yaw is not None else 0.0
+            cmd.ranges.lin_vel_x = (vx, vx)
+            cmd.ranges.lin_vel_y = (vy, vy)
+            cmd.ranges.ang_vel_z = (yaw, yaw)
+            print(f"[PLAY] Fixed command: vx={vx}  vy={vy}  yaw={yaw}")
 
         log_root_path = os.path.abspath(os.path.join("logs", "rsl_rl", agent_cfg.experiment_name))
         print(f"[INFO] Loading experiment from directory: {log_root_path}")
@@ -299,6 +317,272 @@ def _play_main() -> None:
     main()
     simulation_app.close()
 
+def _print_obs_terms(env_cfg) -> None:
+    """打印 policy 观测空间的所有 term。
+
+    关键思路：env_cfg.observations.policy 是一个 configclass 对象（本质是 dataclass）。
+    用 dataclasses.fields() 拿到所有字段的描述符，再用 getattr() 读取每个字段的实际值。
+    如果值是 None，说明这个 term 被子类覆盖掉了（比如 flat env 禁用了 height_scan）。
+    如果值有 .func 属性，说明它是一个 ObsTerm，打印函数名。
+    """
+    import dataclasses
+
+    print("\n=== Observation Terms (policy) ===")
+    policy = env_cfg.observations.policy
+    for field in dataclasses.fields(policy):
+        name = field.name
+        value = getattr(policy, name)
+        if value is None:
+            print(f"  {name}: DISABLED")
+        elif hasattr(value, "func"):
+            # ObsTerm 对象：.func 是实际的函数引用，.__name__ 是函数名
+            print(f"  {name}: {value.func.__name__}")
+        # 跳过 enable_corruption、concatenate_terms 等非 term 的布尔字段
+
+
+def _print_action_config(env_cfg) -> None:
+    """打印 action 空间的配置。
+
+    关键思路：遍历 env_cfg.actions 的字段，每个字段是一个 ActionTermCfg 对象。
+    用 type().__name__ 拿到类名，用 hasattr + getattr 安全地读取可能存在的属性。
+    """
+    import dataclasses
+
+    print("\n=== Action Config ===")
+    for field in dataclasses.fields(env_cfg.actions):
+        name = field.name
+        value = getattr(env_cfg.actions, name)
+        print(f"  [{name}]")
+        print(f"    type:        {type(value).__name__}")
+        print(f"    scale:       {getattr(value, 'scale', 'N/A')}")
+        print(f"    joint_names: {getattr(value, 'joint_names', 'N/A')}")
+
+
+def _print_reward_terms(env_cfg) -> None:
+    """打印所有 reward term 和权重。
+
+    关键思路：weight == 0.0 的 term 是"日志探头"，只监控不影响训练。
+    特别标注出来，帮助快速区分真实奖励和监控项。
+    """
+    import dataclasses
+
+    print("\n=== Reward Terms ===")
+    for field in dataclasses.fields(env_cfg.rewards):
+        name = field.name
+        value = getattr(env_cfg.rewards, name)
+        if value is None:
+            print(f"  {name}: DISABLED")
+        elif hasattr(value, "weight"):
+            tag = "  [LOG-ONLY]" if value.weight == 0.0 else ""
+            print(f"  {name}: weight={value.weight:+.2e}{tag}")
+
+
+def _print_terminations(env_cfg) -> None:
+    """打印所有终止条件。
+
+    关键思路：time_out=True 的 term 是"超时终止"，属于正常结束。
+    其他 term（如 base_contact）是"失败终止"，代表机器人摔倒或违规。
+    """
+    import dataclasses
+
+    print("\n=== Termination Terms ===")
+    for field in dataclasses.fields(env_cfg.terminations):
+        name = field.name
+        value = getattr(env_cfg.terminations, name)
+        if value is None:
+            print(f"  {name}: DISABLED")
+        else:
+            is_timeout = getattr(value, "time_out", False)
+            tag = "  [timeout]" if is_timeout else "  [failure]"
+            print(f"  {name}{tag}")
+
+
+def _print_command_ranges(env_cfg) -> None:
+    """打印速度指令的采样范围。
+
+    关键思路：env_cfg.commands 下有一个 base_velocity 字段，
+    它的 .ranges 属性存储了 lin_vel_x、lin_vel_y、ang_vel_z 等的上下界。
+    """
+    import dataclasses
+
+    print("\n=== Command Ranges ===")
+    for field in dataclasses.fields(env_cfg.commands):
+        name = field.name
+        cmd = getattr(env_cfg.commands, name)
+        print(f"  [{name}]  type: {type(cmd).__name__}")
+        if hasattr(cmd, "ranges"):
+            for r_field in dataclasses.fields(cmd.ranges):
+                r_name = r_field.name
+                r_value = getattr(cmd.ranges, r_name)
+                print(f"    {r_name}: {r_value}")
+
+
+def _print_height_scanner(env_cfg) -> None:
+    """检查 height scanner 是否启用。"""
+    print("\n=== Height Scanner ===")
+    enabled = env_cfg.scene.height_scanner is not None
+    print(f"  enabled: {enabled}")
+
+
+def _inspect_main() -> None:
+    parser = argparse.ArgumentParser(description="Inspect PULSE env config.")
+    parser.add_argument("--task", type=str, default=None, help="Name of the task.")
+    parser.add_argument(
+        "--agent", type=str, default="rsl_rl_cfg_entry_point", help="Name of the RL agent configuration entry point."
+    )
+    args_cli, _app_launcher, simulation_app = _parse_and_launch_app(parser)
+
+    # 延迟 import：必须在 AppLauncher 初始化之后才能导入 isaaclab 模块
+    from isaaclab.envs import ManagerBasedRLEnvCfg
+    from isaaclab_tasks.utils.hydra import hydra_task_config
+    import isaaclab_tasks  # noqa: F401
+    import pulse.envs  # noqa: F401
+
+    @hydra_task_config(args_cli.task, args_cli.agent)
+    def main(env_cfg: ManagerBasedRLEnvCfg, agent_cfg):
+        print(f"\n{'='*50}")
+        print(f"  PULSE Env Inspector")
+        print(f"  Task: {args_cli.task}")
+        print(f"  Cfg:  {type(env_cfg).__name__}")
+        print(f"{'='*50}")
+        _print_obs_terms(env_cfg)
+        _print_action_config(env_cfg)
+        _print_reward_terms(env_cfg)
+        _print_terminations(env_cfg)
+        _print_command_ranges(env_cfg)
+        _print_height_scanner(env_cfg)
+        print()
+
+    main()
+    simulation_app.close()
+
+
+def _run_one_condition(
+    env,
+    policy,
+    mass_scale: float,
+    com_x_offset: float,
+    num_episodes: int,
+) -> dict:
+    """Run rollouts for a single (mass_scale, com_x_offset) condition.
+
+    Returns a dict with aggregated metrics across num_episodes.
+
+    TODO (Week 2): implement domain-randomization override for mass and CoM,
+    run the rollout loop, collect episode_length and success_flag per episode,
+    and return mean / std statistics.
+    """
+    # Placeholder — real logic goes here in Week 2.
+    return {
+        "mass_scale": mass_scale,
+        "com_x_offset": com_x_offset,
+        "mean_episode_length": None,
+        "success_rate": None,
+    }
+
+
+def _save_results(results: list[dict], output_path: str) -> None:
+    """Serialize eval results to a JSON file.
+
+    TODO (Week 2): write results with json.dump, create parent dirs if needed,
+    and print a confirmation line with the absolute path.
+    """
+    # Placeholder — real logic goes here in Week 2.
+    pass
+
+
+def _eval_payload_main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Evaluate a PULSE checkpoint under varying payload conditions."
+    )
+    parser.add_argument("--task", type=str, default=None, help="Registered task name.")
+    parser.add_argument(
+        "--agent", type=str, default="rsl_rl_cfg_entry_point", help="Agent cfg entry point."
+    )
+    parser.add_argument(
+        "--mass_scales",
+        type=float,
+        nargs="+",
+        default=[1.0],
+        help="Body mass scale factors to evaluate (e.g. 1.0 1.1 1.2).",
+    )
+    parser.add_argument(
+        "--com_x_offsets",
+        type=float,
+        nargs="+",
+        default=[0.0],
+        help="CoM x-axis offsets in metres to evaluate (e.g. 0.0 0.01 -0.01).",
+    )
+    parser.add_argument("--num_episodes", type=int, default=10, help="Episodes per condition.")
+    parser.add_argument("--num_envs", type=int, default=50, help="Number of parallel environments.")
+    parser.add_argument(
+        "--output",
+        type=str,
+        default=None,
+        help="Path for the JSON results file. Auto-generated if omitted.",
+    )
+    cli_args.add_rsl_rl_args(parser)
+    args_cli, _app_launcher, simulation_app = _parse_and_launch_app(parser)
+
+    # Delayed imports: must come after AppLauncher initialises the Omniverse runtime.
+    import gymnasium as gym
+    from isaaclab.envs import ManagerBasedRLEnvCfg
+    from isaaclab.utils.assets import retrieve_file_path
+    from isaaclab_rl.rsl_rl import RslRlBaseRunnerCfg, RslRlVecEnvWrapper, handle_deprecated_rsl_rl_cfg
+    from isaaclab_tasks.utils.hydra import hydra_task_config
+    from rsl_rl.runners import OnPolicyRunner
+    import isaaclab_tasks  # noqa: F401
+    import pulse.envs  # noqa: F401
+
+    @hydra_task_config(args_cli.task, args_cli.agent)
+    def main(env_cfg: ManagerBasedRLEnvCfg, agent_cfg: RslRlBaseRunnerCfg):
+        # --- configure env ---
+        env_cfg.scene.num_envs = args_cli.num_envs
+        env_cfg.sim.device = args_cli.device if args_cli.device is not None else env_cfg.sim.device
+        agent_cfg = cli_args.update_rsl_rl_cfg(agent_cfg, args_cli)
+        agent_cfg = handle_deprecated_rsl_rl_cfg(agent_cfg, metadata.version("rsl-rl-lib"))
+
+        # --- load policy ---
+        resume_path = retrieve_file_path(args_cli.checkpoint)
+        print(f"[EVAL] Loading checkpoint: {resume_path}")
+        env = gym.make(args_cli.task, cfg=env_cfg)
+        env = RslRlVecEnvWrapper(env, clip_actions=agent_cfg.clip_actions)
+        runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=None, device=agent_cfg.device)
+        runner.load(resume_path)
+        policy = runner.get_inference_policy(device=env.unwrapped.device)
+
+        # --- determine output path ---
+        if args_cli.output is not None:
+            output_path = args_cli.output
+        else:
+            from datetime import datetime
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            output_path = f"results/eval_payload_{timestamp}.json"
+
+        # --- sweep over all (mass_scale, com_x_offset) combinations ---
+        results = []
+        total = len(args_cli.mass_scales) * len(args_cli.com_x_offsets)
+        done = 0
+        for mass_scale in args_cli.mass_scales:
+            for com_x_offset in args_cli.com_x_offsets:
+                done += 1
+                print(f"[EVAL] [{done}/{total}] mass_scale={mass_scale}  com_x_offset={com_x_offset}")
+                metrics = _run_one_condition(
+                    env=env,
+                    policy=policy,
+                    mass_scale=mass_scale,
+                    com_x_offset=com_x_offset,
+                    num_episodes=args_cli.num_episodes,
+                )
+                results.append(metrics)
+
+        _save_results(results, output_path)
+        print(f"[EVAL] Done. {len(results)} conditions evaluated.")
+        env.close()
+
+    main()
+    simulation_app.close()
+
 
 if __name__ == "__main__":
     mode = os.environ.get("PULSE_ENTRY_MODE", "train").strip().lower()
@@ -306,6 +590,10 @@ if __name__ == "__main__":
         _train_main()
     elif mode == "play":
         _play_main()
+    elif mode == "inspect":
+        _inspect_main()
+    elif mode == "eval_payload":
+        _eval_payload_main()
     else:
-        raise ValueError("Invalid PULSE_ENTRY_MODE. Expected 'train' or 'play'.")
+        raise ValueError("Invalid PULSE_ENTRY_MODE. Expected 'train', 'play', 'inspect', or 'eval_payload'.")
 

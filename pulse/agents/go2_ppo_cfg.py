@@ -10,3 +10,5 @@ class Go2PULSEFlatPPORunnerCfg(UnitreeGo2FlatPPORunnerCfg):
         super().__post_init__()
 
         self.experiment_name = "go2_pulse_flat"
+        # Upstream flat default is 300; raise to 1500 for a stable baseline.
+        self.max_iterations = 300 

@@ -15,6 +15,20 @@ class Go2PulseFlatEnvCfg(UnitreeGo2FlatEnvCfg):
         self.curriculum.terrain_levels = None
 
         # ==========================================
+        # 命令分布修正
+        #
+        # 原因 1：heading_command=True 让 yaw 命令随时间衰减到 0，
+        #         策略永远没见过"持续恒定 yaw rate"，导致 eval OOD。
+        #         改为 False 后，yaw rate 直接从 range 采样，与 eval 一致。
+        #
+        # 原因 2：rel_standing_envs=0.02 太低，原地转圈几乎没训练过。
+        #         提高到 0.20，让 20% 的环境专门训练低速 / 原地旋转。
+        # ==========================================
+        self.commands.base_velocity.heading_command = False
+        self.commands.base_velocity.rel_standing_envs = 0.20
+        self.commands.base_velocity.rel_heading_envs = 0.0
+
+        # ==========================================
         # 📊 监控中心 (Logging & Stats)
         # 核心思想：利用权重为 0.0 的 Reward 充当日志探头
         # 这样它们的数据会原封不动地出现在 Tensorboard 里，但不会干扰梯度更新！
