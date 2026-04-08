@@ -1,0 +1,320 @@
+{
+  "task": "Go2-Pulse-Flat-v0",
+  "env_cfg_class": "Go2PulseFlatEnvCfg",
+  "observation_space": "Dict('policy': Box(-inf, inf, (1, 48), float32))",
+  "action_space": "Box(-inf, inf, (1, 12), float32)",
+  "policy_group_dim": [
+    48
+  ],
+  "step_dt": 0.02,
+  "episode_length_s": 20.0,
+  "observations": [
+    {
+      "group": "policy",
+      "name": "base_lin_vel",
+      "dims": [
+        3
+      ],
+      "func": "isaaclab.envs.mdp.observations.base_lin_vel",
+      "noise": "UniformNoiseCfg",
+      "clip": null
+    },
+    {
+      "group": "policy",
+      "name": "base_ang_vel",
+      "dims": [
+        3
+      ],
+      "func": "isaaclab.envs.mdp.observations.base_ang_vel",
+      "noise": "UniformNoiseCfg",
+      "clip": null
+    },
+    {
+      "group": "policy",
+      "name": "projected_gravity",
+      "dims": [
+        3
+      ],
+      "func": "isaaclab.envs.mdp.observations.projected_gravity",
+      "noise": "UniformNoiseCfg",
+      "clip": null
+    },
+    {
+      "group": "policy",
+      "name": "velocity_commands",
+      "dims": [
+        3
+      ],
+      "func": "isaaclab.envs.mdp.observations.generated_commands",
+      "noise": null,
+      "clip": null
+    },
+    {
+      "group": "policy",
+      "name": "joint_pos",
+      "dims": [
+        12
+      ],
+      "func": "isaaclab.envs.mdp.observations.joint_pos_rel",
+      "noise": "UniformNoiseCfg",
+      "clip": null
+    },
+    {
+      "group": "policy",
+      "name": "joint_vel",
+      "dims": [
+        12
+      ],
+      "func": "isaaclab.envs.mdp.observations.joint_vel_rel",
+      "noise": "UniformNoiseCfg",
+      "clip": null
+    },
+    {
+      "group": "policy",
+      "name": "actions",
+      "dims": [
+        12
+      ],
+      "func": "isaaclab.envs.mdp.observations.last_action",
+      "noise": null,
+      "clip": null
+    }
+  ],
+  "actions": [
+    {
+      "name": "joint_pos",
+      "dim": 12,
+      "term_type": "JointPositionAction",
+      "cfg_type": "JointPositionActionCfg",
+      "key_fields": {
+        "asset_name": "robot",
+        "joint_names": [
+          ".*"
+        ],
+        "joint_names_expr": null,
+        "scale": 0.25,
+        "offset": 0.0,
+        "use_default_offset": true,
+        "clip": null
+      }
+    }
+  ],
+  "rewards": [
+    {
+      "name": "track_lin_vel_xy_exp",
+      "weight": 1.5,
+      "func": "isaaclab.envs.mdp.rewards.track_lin_vel_xy_exp",
+      "params": {
+        "command_name": "base_velocity",
+        "std": 0.5
+      },
+      "log_only": false
+    },
+    {
+      "name": "track_ang_vel_z_exp",
+      "weight": 0.75,
+      "func": "isaaclab.envs.mdp.rewards.track_ang_vel_z_exp",
+      "params": {
+        "command_name": "base_velocity",
+        "std": 0.5
+      },
+      "log_only": false
+    },
+    {
+      "name": "lin_vel_z_l2",
+      "weight": -2.0,
+      "func": "isaaclab.envs.mdp.rewards.lin_vel_z_l2",
+      "params": {},
+      "log_only": false
+    },
+    {
+      "name": "ang_vel_xy_l2",
+      "weight": -0.05,
+      "func": "isaaclab.envs.mdp.rewards.ang_vel_xy_l2",
+      "params": {},
+      "log_only": false
+    },
+    {
+      "name": "dof_torques_l2",
+      "weight": -0.0002,
+      "func": "isaaclab.envs.mdp.rewards.joint_torques_l2",
+      "params": {},
+      "log_only": false
+    },
+    {
+      "name": "dof_acc_l2",
+      "weight": -2.5e-07,
+      "func": "isaaclab.envs.mdp.rewards.joint_acc_l2",
+      "params": {},
+      "log_only": false
+    },
+    {
+      "name": "action_rate_l2",
+      "weight": -0.01,
+      "func": "isaaclab.envs.mdp.rewards.action_rate_l2",
+      "params": {},
+      "log_only": false
+    },
+    {
+      "name": "feet_air_time",
+      "weight": 0.25,
+      "func": "isaaclab_tasks.manager_based.locomotion.velocity.mdp.rewards.feet_air_time",
+      "params": {
+        "sensor_cfg": {
+          "name": "contact_forces",
+          "joint_names": null,
+          "joint_ids": "slice(None, None, None)",
+          "fixed_tendon_names": null,
+          "fixed_tendon_ids": "slice(None, None, None)",
+          "body_names": [
+            ".*_foot"
+          ],
+          "body_ids": [
+            4,
+            8,
+            14,
+            18
+          ],
+          "object_collection_names": null,
+          "object_collection_ids": "slice(None, None, None)",
+          "preserve_order": false
+        },
+        "command_name": "base_velocity",
+        "threshold": 0.5
+      },
+      "log_only": false
+    },
+    {
+      "name": "flat_orientation_l2",
+      "weight": -2.5,
+      "func": "isaaclab.envs.mdp.rewards.flat_orientation_l2",
+      "params": {},
+      "log_only": false
+    },
+    {
+      "name": "dof_pos_limits",
+      "weight": 0.0,
+      "func": "isaaclab.envs.mdp.rewards.joint_pos_limits",
+      "params": {},
+      "log_only": true
+    },
+    {
+      "name": "log_base_contact",
+      "weight": 0.0,
+      "func": "isaaclab.envs.mdp.terminations.illegal_contact",
+      "params": {
+        "sensor_cfg": {
+          "name": "contact_forces",
+          "joint_names": null,
+          "joint_ids": "slice(None, None, None)",
+          "fixed_tendon_names": null,
+          "fixed_tendon_ids": "slice(None, None, None)",
+          "body_names": [
+            "base"
+          ],
+          "body_ids": [
+            0
+          ],
+          "object_collection_names": null,
+          "object_collection_ids": "slice(None, None, None)",
+          "preserve_order": false
+        },
+        "threshold": 1.0
+      },
+      "log_only": true
+    },
+    {
+      "name": "log_action_rate",
+      "weight": 0.0,
+      "func": "isaaclab.envs.mdp.rewards.action_rate_l2",
+      "params": {},
+      "log_only": true
+    },
+    {
+      "name": "log_joint_acc",
+      "weight": 0.0,
+      "func": "isaaclab.envs.mdp.rewards.joint_acc_l2",
+      "params": {},
+      "log_only": true
+    },
+    {
+      "name": "log_joint_limits",
+      "weight": 0.0,
+      "func": "isaaclab.envs.mdp.rewards.joint_pos_limits",
+      "params": {},
+      "log_only": true
+    }
+  ],
+  "terminations": [
+    {
+      "name": "time_out",
+      "time_out": true,
+      "failure": false,
+      "func": "isaaclab.envs.mdp.terminations.time_out",
+      "params": {}
+    },
+    {
+      "name": "base_contact",
+      "time_out": false,
+      "failure": true,
+      "func": "isaaclab.envs.mdp.terminations.illegal_contact",
+      "params": {
+        "sensor_cfg": {
+          "name": "contact_forces",
+          "joint_names": null,
+          "joint_ids": "slice(None, None, None)",
+          "fixed_tendon_names": null,
+          "fixed_tendon_ids": "slice(None, None, None)",
+          "body_names": [
+            "base"
+          ],
+          "body_ids": [
+            0
+          ],
+          "object_collection_names": null,
+          "object_collection_ids": "slice(None, None, None)",
+          "preserve_order": false
+        },
+        "threshold": 1.0
+      }
+    }
+  ],
+  "commands": [
+    {
+      "name": "base_velocity",
+      "term_type": "UniformVelocityCommand",
+      "command_dim": [
+        3
+      ],
+      "resampling_time_range": [
+        10.0,
+        10.0
+      ],
+      "heading_command": false,
+      "rel_standing_envs": 0.2,
+      "rel_heading_envs": 0.0,
+      "ranges": {
+        "lin_vel_x": [
+          -1.0,
+          1.0
+        ],
+        "lin_vel_y": [
+          -1.0,
+          1.0
+        ],
+        "ang_vel_z": [
+          -1.0,
+          1.0
+        ],
+        "heading": [
+          -3.141592653589793,
+          3.141592653589793
+        ]
+      }
+    }
+  ],
+  "height_scanner": {
+    "scene_enabled": false,
+    "policy_obs_enabled": false
+  }
+}

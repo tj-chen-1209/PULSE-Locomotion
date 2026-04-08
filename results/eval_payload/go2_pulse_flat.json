@@ -1,0 +1,1385 @@
+{
+  "task": "Go2-Pulse-Flat-Play-v0",
+  "checkpoint": "/home/tingjia/Project/PULSE-Locomotion/logs/rsl_rl/go2_pulse_flat/2026-03-31_11-22-54/model_299.pt",
+  "metric_definitions": {
+    "mean_tracking_error": "Mean sqrt((vx-vx_cmd)^2 + (vy-vy_cmd)^2 + (yaw-yaw_cmd)^2) over rollout steps.",
+    "mean_abs_roll_deg": "Mean absolute roll angle in degrees over rollout steps.",
+    "mean_abs_pitch_deg": "Mean absolute pitch angle in degrees over rollout steps.",
+    "pitch_rms_deg": "Root-mean-square pitch angle in degrees over rollout steps.",
+    "peak_abs_pitch_deg": "Peak absolute pitch angle in degrees observed during the rollout.",
+    "mean_action_rate_l2": "Mean action-rate L2 penalty from Isaac Lab reward source over rollout steps.",
+    "mean_joint_acc_l2": "Mean joint-acceleration L2 penalty from Isaac Lab reward source over rollout steps.",
+    "mean_torque_l2": "Mean joint-torque L2 penalty from Isaac Lab reward source over rollout steps.",
+    "mean_abs_power": "Mean absolute mechanical power sum(abs(torque * joint_vel)) over rollout steps.",
+    "success_rate": "Fraction of episodes that finish by time_out instead of a failure term.",
+    "fall_rate": "Fraction of episodes terminated by a failure term rather than time_out.",
+    "survival_time_s": "Mean episode duration in seconds until termination."
+  },
+  "plot_metrics": [
+    "mean_abs_pitch_deg",
+    "mean_tracking_error",
+    "success_rate",
+    "fall_rate"
+  ],
+  "mass_scales": [
+    1.0,
+    1.1,
+    1.2
+  ],
+  "com_x_values": [
+    -0.02,
+    0.0,
+    0.02
+  ],
+  "scenario_configs": [
+    {
+      "name": "mass_1p00__com_x_neg0p020",
+      "label": "mass=1.0, com_x=-0.02 (small_backward)",
+      "mass_scale": 1.0,
+      "com_x": -0.02,
+      "com_x_preset": "small_backward"
+    },
+    {
+      "name": "mass_1p00__com_x_pos0p000",
+      "label": "mass=1.0, com_x=+0.00 (nominal)",
+      "mass_scale": 1.0,
+      "com_x": 0.0,
+      "com_x_preset": "nominal"
+    },
+    {
+      "name": "mass_1p00__com_x_pos0p020",
+      "label": "mass=1.0, com_x=+0.02 (small_forward)",
+      "mass_scale": 1.0,
+      "com_x": 0.02,
+      "com_x_preset": "small_forward"
+    },
+    {
+      "name": "mass_1p10__com_x_neg0p020",
+      "label": "mass=1.1, com_x=-0.02 (small_backward)",
+      "mass_scale": 1.1,
+      "com_x": -0.02,
+      "com_x_preset": "small_backward"
+    },
+    {
+      "name": "mass_1p10__com_x_pos0p000",
+      "label": "mass=1.1, com_x=+0.00 (nominal)",
+      "mass_scale": 1.1,
+      "com_x": 0.0,
+      "com_x_preset": "nominal"
+    },
+    {
+      "name": "mass_1p10__com_x_pos0p020",
+      "label": "mass=1.1, com_x=+0.02 (small_forward)",
+      "mass_scale": 1.1,
+      "com_x": 0.02,
+      "com_x_preset": "small_forward"
+    },
+    {
+      "name": "mass_1p20__com_x_neg0p020",
+      "label": "mass=1.2, com_x=-0.02 (small_backward)",
+      "mass_scale": 1.2,
+      "com_x": -0.02,
+      "com_x_preset": "small_backward"
+    },
+    {
+      "name": "mass_1p20__com_x_pos0p000",
+      "label": "mass=1.2, com_x=+0.00 (nominal)",
+      "mass_scale": 1.2,
+      "com_x": 0.0,
+      "com_x_preset": "nominal"
+    },
+    {
+      "name": "mass_1p20__com_x_pos0p020",
+      "label": "mass=1.2, com_x=+0.02 (small_forward)",
+      "mass_scale": 1.2,
+      "com_x": 0.02,
+      "com_x_preset": "small_forward"
+    }
+  ],
+  "scenarios": [
+    {
+      "num_episodes": 30,
+      "mean_tracking_error": 0.13910664265950523,
+      "mean_abs_roll_deg": 1.703897762044271,
+      "mean_abs_pitch_deg": 1.086150146484375,
+      "pitch_rms_deg": 1.2028097848097483,
+      "peak_abs_pitch_deg": 2.4493683020273846,
+      "mean_action_rate_l2": 3.508542350260418,
+      "mean_joint_acc_l2": 162307.21093333332,
+      "mean_torque_l2": 416.6343,
+      "mean_abs_power": 92.17615729166666,
+      "fall_rate": 0.0,
+      "survival_time_s": 20.0,
+      "success_rate": 1.0,
+      "termination_counts": {
+        "time_out": 30
+      },
+      "scenario": "mass_1p00__com_x_neg0p020",
+      "label": "mass=1.0, com_x=-0.02 (small_backward)",
+      "mass_scale": 1.0,
+      "com_x": -0.02,
+      "com_x_preset": "small_backward",
+      "payload_audit": {
+        "base_body_name": "base",
+        "nominal_base_mass": 6.9210004806518555,
+        "applied_base_mass": 6.9210004806518555,
+        "nominal_base_com": [
+          0.021111996844410896,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_base_com": [
+          0.0011119972914457321,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_mass_scale_vs_nominal": 1.0,
+        "applied_com_x_delta": -0.019999999552965164
+      },
+      "per_command": [
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.1384492721557617,
+          "mean_abs_roll_deg": 1.1718421142578124,
+          "mean_abs_pitch_deg": 0.8418493041992188,
+          "pitch_rms_deg": 0.9625552594661713,
+          "peak_abs_pitch_deg": 2.060445690155029,
+          "mean_action_rate_l2": 4.398612207031251,
+          "mean_joint_acc_l2": 222271.05440000002,
+          "mean_torque_l2": 430.94436250000007,
+          "mean_abs_power": 106.2508609375,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "forward",
+          "vx": 0.8,
+          "vy": 0.0,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.25,
+            "mean_abs_roll_deg_max": 6.0,
+            "mean_abs_pitch_deg_max": 6.0,
+            "fall_rate_max": 0.05,
+            "survival_time_s_min": 18.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.13480587921142578,
+          "mean_abs_roll_deg": 1.1940120849609375,
+          "mean_abs_pitch_deg": 1.0062327514648437,
+          "pitch_rms_deg": 1.2136141419410706,
+          "peak_abs_pitch_deg": 2.8079827070236205,
+          "mean_action_rate_l2": 3.165761694335938,
+          "mean_joint_acc_l2": 117106.1416,
+          "mean_torque_l2": 460.40293125,
+          "mean_abs_power": 64.87653828124999,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "turn",
+          "vx": 0.4,
+          "vy": 0.0,
+          "yaw": 0.8,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.14406477661132813,
+          "mean_abs_roll_deg": 2.7458390869140628,
+          "mean_abs_pitch_deg": 1.4103683837890628,
+          "pitch_rms_deg": 1.4322599530220033,
+          "peak_abs_pitch_deg": 2.4796765089035033,
+          "mean_action_rate_l2": 2.9612531494140626,
+          "mean_joint_acc_l2": 147544.4368,
+          "mean_torque_l2": 358.55560625000004,
+          "mean_abs_power": 105.40107265625002,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "diagonal",
+          "vx": 0.5,
+          "vy": 0.3,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "num_episodes": 30,
+      "mean_tracking_error": 0.13694959030151363,
+      "mean_abs_roll_deg": 1.7220547322591144,
+      "mean_abs_pitch_deg": 1.6841910441080725,
+      "pitch_rms_deg": 1.7647517720858257,
+      "peak_abs_pitch_deg": 2.767313838005066,
+      "mean_action_rate_l2": 3.483058577473959,
+      "mean_joint_acc_l2": 151424.49813333334,
+      "mean_torque_l2": 415.22463020833334,
+      "mean_abs_power": 91.29654401041665,
+      "fall_rate": 0.0,
+      "survival_time_s": 20.0,
+      "success_rate": 1.0,
+      "termination_counts": {
+        "time_out": 30
+      },
+      "scenario": "mass_1p00__com_x_pos0p000",
+      "label": "mass=1.0, com_x=+0.00 (nominal)",
+      "mass_scale": 1.0,
+      "com_x": 0.0,
+      "com_x_preset": "nominal",
+      "payload_audit": {
+        "base_body_name": "base",
+        "nominal_base_mass": 6.9210004806518555,
+        "applied_base_mass": 6.9210004806518555,
+        "nominal_base_com": [
+          0.021111996844410896,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_base_com": [
+          0.021111996844410896,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_mass_scale_vs_nominal": 1.0,
+        "applied_com_x_delta": 0.0
+      },
+      "per_command": [
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.13993762664794923,
+          "mean_abs_roll_deg": 1.2281192993164063,
+          "mean_abs_pitch_deg": 1.4577595581054688,
+          "pitch_rms_deg": 1.5400304675102234,
+          "peak_abs_pitch_deg": 2.2358668088912963,
+          "mean_action_rate_l2": 4.394222509765625,
+          "mean_joint_acc_l2": 198670.33280000003,
+          "mean_torque_l2": 426.53899687499995,
+          "mean_abs_power": 103.20327499999999,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "forward",
+          "vx": 0.8,
+          "vy": 0.0,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.25,
+            "mean_abs_roll_deg_max": 6.0,
+            "mean_abs_pitch_deg_max": 6.0,
+            "fall_rate_max": 0.05,
+            "survival_time_s_min": 18.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.12511495590209962,
+          "mean_abs_roll_deg": 1.1792359375,
+          "mean_abs_pitch_deg": 1.6041673828124998,
+          "pitch_rms_deg": 1.7400028228759765,
+          "peak_abs_pitch_deg": 3.5185152769088743,
+          "mean_action_rate_l2": 3.082981713867188,
+          "mean_joint_acc_l2": 107503.9264,
+          "mean_torque_l2": 457.23673125000005,
+          "mean_abs_power": 66.19760390625,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "turn",
+          "vx": 0.4,
+          "vy": 0.0,
+          "yaw": 0.8,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.1457961883544922,
+          "mean_abs_roll_deg": 2.7588089599609376,
+          "mean_abs_pitch_deg": 1.9906461914062497,
+          "pitch_rms_deg": 2.014222025871277,
+          "peak_abs_pitch_deg": 2.5475594282150267,
+          "mean_action_rate_l2": 2.971971508789063,
+          "mean_joint_acc_l2": 148099.2352,
+          "mean_torque_l2": 361.8981625,
+          "mean_abs_power": 104.48875312500002,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "diagonal",
+          "vx": 0.5,
+          "vy": 0.3,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "num_episodes": 30,
+      "mean_tracking_error": 0.13899257609049484,
+      "mean_abs_roll_deg": 1.6947621541341147,
+      "mean_abs_pitch_deg": 2.4244928222656252,
+      "pitch_rms_deg": 2.488852834701538,
+      "peak_abs_pitch_deg": 3.525836126009623,
+      "mean_action_rate_l2": 3.508252970377605,
+      "mean_joint_acc_l2": 156020.32560000004,
+      "mean_torque_l2": 413.14541875000003,
+      "mean_abs_power": 91.15082421874999,
+      "fall_rate": 0.0,
+      "survival_time_s": 20.0,
+      "success_rate": 1.0,
+      "termination_counts": {
+        "time_out": 30
+      },
+      "scenario": "mass_1p00__com_x_pos0p020",
+      "label": "mass=1.0, com_x=+0.02 (small_forward)",
+      "mass_scale": 1.0,
+      "com_x": 0.02,
+      "com_x_preset": "small_forward",
+      "payload_audit": {
+        "base_body_name": "base",
+        "nominal_base_mass": 6.9210004806518555,
+        "applied_base_mass": 6.9210004806518555,
+        "nominal_base_com": [
+          0.021111996844410896,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_base_com": [
+          0.04111199826002121,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_mass_scale_vs_nominal": 1.0,
+        "applied_com_x_delta": 0.020000001415610313
+      },
+      "per_command": [
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.13694992523193358,
+          "mean_abs_roll_deg": 1.203473400878906,
+          "mean_abs_pitch_deg": 2.0934668701171875,
+          "pitch_rms_deg": 2.1590426445007322,
+          "peak_abs_pitch_deg": 2.8799487352371216,
+          "mean_action_rate_l2": 4.41199619140625,
+          "mean_joint_acc_l2": 197748.70080000002,
+          "mean_torque_l2": 424.59620937499994,
+          "mean_abs_power": 103.91849453125,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "forward",
+          "vx": 0.8,
+          "vy": 0.0,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.25,
+            "mean_abs_roll_deg_max": 6.0,
+            "mean_abs_pitch_deg_max": 6.0,
+            "fall_rate_max": 0.05,
+            "survival_time_s_min": 18.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.12902294921875,
+          "mean_abs_roll_deg": 1.0821588134765625,
+          "mean_abs_pitch_deg": 2.6096461914062505,
+          "pitch_rms_deg": 2.7045685052871704,
+          "peak_abs_pitch_deg": 4.458016681671142,
+          "mean_action_rate_l2": 3.0981999755859375,
+          "mean_joint_acc_l2": 123567.6824,
+          "mean_torque_l2": 448.5371375,
+          "mean_abs_power": 64.99159296875,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "turn",
+          "vx": 0.4,
+          "vy": 0.0,
+          "yaw": 0.8,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.15100485382080078,
+          "mean_abs_roll_deg": 2.798654248046875,
+          "mean_abs_pitch_deg": 2.5703654052734377,
+          "pitch_rms_deg": 2.6029473543167114,
+          "peak_abs_pitch_deg": 3.2395429611206055,
+          "mean_action_rate_l2": 3.0145627441406253,
+          "mean_joint_acc_l2": 146744.59360000002,
+          "mean_torque_l2": 366.30290937499996,
+          "mean_abs_power": 104.54238515624999,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "diagonal",
+          "vx": 0.5,
+          "vy": 0.3,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "num_episodes": 30,
+      "mean_tracking_error": 0.1429899820963542,
+      "mean_abs_roll_deg": 1.7659451700846358,
+      "mean_abs_pitch_deg": 1.1648315470377606,
+      "pitch_rms_deg": 1.2879547158877054,
+      "peak_abs_pitch_deg": 2.6461970806121826,
+      "mean_action_rate_l2": 3.672199438476562,
+      "mean_joint_acc_l2": 163576.94053333334,
+      "mean_torque_l2": 457.73915729166663,
+      "mean_abs_power": 95.95484322916667,
+      "fall_rate": 0.0,
+      "survival_time_s": 20.0,
+      "success_rate": 1.0,
+      "termination_counts": {
+        "time_out": 30
+      },
+      "scenario": "mass_1p10__com_x_neg0p020",
+      "label": "mass=1.1, com_x=-0.02 (small_backward)",
+      "mass_scale": 1.1,
+      "com_x": -0.02,
+      "com_x_preset": "small_backward",
+      "payload_audit": {
+        "base_body_name": "base",
+        "nominal_base_mass": 6.9210004806518555,
+        "applied_base_mass": 7.613100528717041,
+        "nominal_base_com": [
+          0.021111996844410896,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_base_com": [
+          0.0011119972914457321,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_mass_scale_vs_nominal": 1.1,
+        "applied_com_x_delta": -0.019999999552965164
+      },
+      "per_command": [
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.14399876403808592,
+          "mean_abs_roll_deg": 1.3319805175781252,
+          "mean_abs_pitch_deg": 0.8203194458007813,
+          "pitch_rms_deg": 0.9584359169006348,
+          "peak_abs_pitch_deg": 2.216760683059692,
+          "mean_action_rate_l2": 4.6004361816406245,
+          "mean_joint_acc_l2": 215573.7904,
+          "mean_torque_l2": 476.36156250000005,
+          "mean_abs_power": 107.77979687499999,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "forward",
+          "vx": 0.8,
+          "vy": 0.0,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.25,
+            "mean_abs_roll_deg_max": 6.0,
+            "mean_abs_pitch_deg_max": 6.0,
+            "fall_rate_max": 0.05,
+            "survival_time_s_min": 18.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.13758933105468749,
+          "mean_abs_roll_deg": 1.2942015991210938,
+          "mean_abs_pitch_deg": 1.1187671142578124,
+          "pitch_rms_deg": 1.3260221123695373,
+          "peak_abs_pitch_deg": 3.2564371109008787,
+          "mean_action_rate_l2": 3.332820971679687,
+          "mean_joint_acc_l2": 116563.4344,
+          "mean_torque_l2": 503.7482250000001,
+          "mean_abs_power": 69.07272265625,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "turn",
+          "vx": 0.4,
+          "vy": 0.0,
+          "yaw": 0.8,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.14738185119628905,
+          "mean_abs_roll_deg": 2.6716533935546876,
+          "mean_abs_pitch_deg": 1.5554080810546878,
+          "pitch_rms_deg": 1.5794061183929444,
+          "peak_abs_pitch_deg": 2.4653934478759765,
+          "mean_action_rate_l2": 3.083341162109375,
+          "mean_joint_acc_l2": 158593.5968,
+          "mean_torque_l2": 393.1076843750001,
+          "mean_abs_power": 111.01201015625,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "diagonal",
+          "vx": 0.5,
+          "vy": 0.3,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "num_episodes": 30,
+      "mean_tracking_error": 0.14027470652262367,
+      "mean_abs_roll_deg": 1.79326435953776,
+      "mean_abs_pitch_deg": 1.8564726562499996,
+      "pitch_rms_deg": 1.9363845745722452,
+      "peak_abs_pitch_deg": 3.005277649561564,
+      "mean_action_rate_l2": 3.6832559082031264,
+      "mean_joint_acc_l2": 152908.44720000002,
+      "mean_torque_l2": 455.59284166666663,
+      "mean_abs_power": 95.86448463541666,
+      "fall_rate": 0.0,
+      "survival_time_s": 20.0,
+      "success_rate": 1.0,
+      "termination_counts": {
+        "time_out": 30
+      },
+      "scenario": "mass_1p10__com_x_pos0p000",
+      "label": "mass=1.1, com_x=+0.00 (nominal)",
+      "mass_scale": 1.1,
+      "com_x": 0.0,
+      "com_x_preset": "nominal",
+      "payload_audit": {
+        "base_body_name": "base",
+        "nominal_base_mass": 6.9210004806518555,
+        "applied_base_mass": 7.613100528717041,
+        "nominal_base_com": [
+          0.021111996844410896,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_base_com": [
+          0.021111996844410896,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_mass_scale_vs_nominal": 1.1,
+        "applied_com_x_delta": 0.0
+      },
+      "per_command": [
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.14238695983886718,
+          "mean_abs_roll_deg": 1.3328323608398438,
+          "mean_abs_pitch_deg": 1.5498993896484377,
+          "pitch_rms_deg": 1.6312573075294494,
+          "peak_abs_pitch_deg": 2.3551801681518554,
+          "mean_action_rate_l2": 4.619911083984375,
+          "mean_joint_acc_l2": 204106.7824,
+          "mean_torque_l2": 471.24913125,
+          "mean_abs_power": 106.51695078124999,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "forward",
+          "vx": 0.8,
+          "vy": 0.0,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.25,
+            "mean_abs_roll_deg_max": 6.0,
+            "mean_abs_pitch_deg_max": 6.0,
+            "fall_rate_max": 0.05,
+            "survival_time_s_min": 18.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.13070714416503906,
+          "mean_abs_roll_deg": 1.3257457275390623,
+          "mean_abs_pitch_deg": 1.8191061035156249,
+          "pitch_rms_deg": 1.9491540789604187,
+          "peak_abs_pitch_deg": 3.5673447370529177,
+          "mean_action_rate_l2": 3.3388996826171877,
+          "mean_joint_acc_l2": 102572.3112,
+          "mean_torque_l2": 498.166753125,
+          "mean_abs_power": 70.0600765625,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "turn",
+          "vx": 0.4,
+          "vy": 0.0,
+          "yaw": 0.8,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.14773001556396484,
+          "mean_abs_roll_deg": 2.721214990234375,
+          "mean_abs_pitch_deg": 2.2004124755859378,
+          "pitch_rms_deg": 2.2287423372268678,
+          "peak_abs_pitch_deg": 3.0933080434799196,
+          "mean_action_rate_l2": 3.090956958007813,
+          "mean_joint_acc_l2": 152046.248,
+          "mean_torque_l2": 397.36264062500004,
+          "mean_abs_power": 111.01642656250002,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "diagonal",
+          "vx": 0.5,
+          "vy": 0.3,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "num_episodes": 30,
+      "mean_tracking_error": 0.14014475962320966,
+      "mean_abs_roll_deg": 1.7517479573567711,
+      "mean_abs_pitch_deg": 2.66174512532552,
+      "pitch_rms_deg": 2.725303602218628,
+      "peak_abs_pitch_deg": 3.8847251335779824,
+      "mean_action_rate_l2": 3.6626736409505205,
+      "mean_joint_acc_l2": 165280.56960000005,
+      "mean_torque_l2": 453.80949166666664,
+      "mean_abs_power": 94.94417265624999,
+      "fall_rate": 0.0,
+      "survival_time_s": 20.0,
+      "success_rate": 1.0,
+      "termination_counts": {
+        "time_out": 30
+      },
+      "scenario": "mass_1p10__com_x_pos0p020",
+      "label": "mass=1.1, com_x=+0.02 (small_forward)",
+      "mass_scale": 1.1,
+      "com_x": 0.02,
+      "com_x_preset": "small_forward",
+      "payload_audit": {
+        "base_body_name": "base",
+        "nominal_base_mass": 6.9210004806518555,
+        "applied_base_mass": 7.613100528717041,
+        "nominal_base_com": [
+          0.021111996844410896,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_base_com": [
+          0.04111199826002121,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_mass_scale_vs_nominal": 1.1,
+        "applied_com_x_delta": 0.020000001415610313
+      },
+      "per_command": [
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.13935008087158202,
+          "mean_abs_roll_deg": 1.3336472412109377,
+          "mean_abs_pitch_deg": 2.2940837890625003,
+          "pitch_rms_deg": 2.355274868011475,
+          "peak_abs_pitch_deg": 3.098251390457153,
+          "mean_action_rate_l2": 4.637236279296875,
+          "mean_joint_acc_l2": 199070.2816,
+          "mean_torque_l2": 468.30145312499997,
+          "mean_abs_power": 105.67267031249999,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "forward",
+          "vx": 0.8,
+          "vy": 0.0,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.25,
+            "mean_abs_roll_deg_max": 6.0,
+            "mean_abs_pitch_deg_max": 6.0,
+            "fall_rate_max": 0.05,
+            "survival_time_s_min": 18.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.12964073638916015,
+          "mean_abs_roll_deg": 1.1658009765624997,
+          "mean_abs_pitch_deg": 2.83454970703125,
+          "pitch_rms_deg": 2.9275819301605224,
+          "peak_abs_pitch_deg": 4.580582904815674,
+          "mean_action_rate_l2": 3.2074373779296876,
+          "mean_joint_acc_l2": 141836.53280000002,
+          "mean_torque_l2": 489.4624468750001,
+          "mean_abs_power": 69.05951406249999,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "turn",
+          "vx": 0.4,
+          "vy": 0.0,
+          "yaw": 0.8,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.15144346160888672,
+          "mean_abs_roll_deg": 2.7557956542968753,
+          "mean_abs_pitch_deg": 2.8566018798828123,
+          "pitch_rms_deg": 2.8930540084838867,
+          "peak_abs_pitch_deg": 3.9753411054611205,
+          "mean_action_rate_l2": 3.1433472656249997,
+          "mean_joint_acc_l2": 154934.8944,
+          "mean_torque_l2": 403.66457500000007,
+          "mean_abs_power": 110.10033359375,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "diagonal",
+          "vx": 0.5,
+          "vy": 0.3,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "num_episodes": 30,
+      "mean_tracking_error": 0.14408333994547526,
+      "mean_abs_roll_deg": 1.8192760701497392,
+      "mean_abs_pitch_deg": 1.1981327555338543,
+      "pitch_rms_deg": 1.3234684586524963,
+      "peak_abs_pitch_deg": 2.614159909884135,
+      "mean_action_rate_l2": 3.836895686848958,
+      "mean_joint_acc_l2": 171596.50559999995,
+      "mean_torque_l2": 501.0366749999998,
+      "mean_abs_power": 101.24920156249998,
+      "fall_rate": 0.0,
+      "survival_time_s": 20.0,
+      "success_rate": 1.0,
+      "termination_counts": {
+        "time_out": 30
+      },
+      "scenario": "mass_1p20__com_x_neg0p020",
+      "label": "mass=1.2, com_x=-0.02 (small_backward)",
+      "mass_scale": 1.2,
+      "com_x": -0.02,
+      "com_x_preset": "small_backward",
+      "payload_audit": {
+        "base_body_name": "base",
+        "nominal_base_mass": 6.9210004806518555,
+        "applied_base_mass": 8.305200576782227,
+        "nominal_base_com": [
+          0.021111996844410896,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_base_com": [
+          0.0011119972914457321,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_mass_scale_vs_nominal": 1.2,
+        "applied_com_x_delta": -0.019999999552965164
+      },
+      "per_command": [
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.14876600494384767,
+          "mean_abs_roll_deg": 1.4388114013671873,
+          "mean_abs_pitch_deg": 0.8648833251953125,
+          "pitch_rms_deg": 1.002152180671692,
+          "peak_abs_pitch_deg": 2.0017894506454468,
+          "mean_action_rate_l2": 4.88229599609375,
+          "mean_joint_acc_l2": 224778.4304,
+          "mean_torque_l2": 522.4022874999999,
+          "mean_abs_power": 112.72613671875001,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "forward",
+          "vx": 0.8,
+          "vy": 0.0,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.25,
+            "mean_abs_roll_deg_max": 6.0,
+            "mean_abs_pitch_deg_max": 6.0,
+            "fall_rate_max": 0.05,
+            "survival_time_s_min": 18.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.13480508422851561,
+          "mean_abs_roll_deg": 1.4203056518554686,
+          "mean_abs_pitch_deg": 1.074601220703125,
+          "pitch_rms_deg": 1.2837147116661072,
+          "peak_abs_pitch_deg": 3.3957967519760133,
+          "mean_action_rate_l2": 3.4260728027343745,
+          "mean_joint_acc_l2": 128855.51039999998,
+          "mean_torque_l2": 548.3815375,
+          "mean_abs_power": 72.947434375,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "turn",
+          "vx": 0.4,
+          "vy": 0.0,
+          "yaw": 0.8,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.14867893066406251,
+          "mean_abs_roll_deg": 2.5987111572265627,
+          "mean_abs_pitch_deg": 1.654913720703125,
+          "pitch_rms_deg": 1.68453848361969,
+          "peak_abs_pitch_deg": 2.4448935270309446,
+          "mean_action_rate_l2": 3.2023182617187502,
+          "mean_joint_acc_l2": 161155.576,
+          "mean_torque_l2": 432.3262000000001,
+          "mean_abs_power": 118.07403359375,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "diagonal",
+          "vx": 0.5,
+          "vy": 0.3,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "num_episodes": 30,
+      "mean_tracking_error": 0.14303424123128256,
+      "mean_abs_roll_deg": 1.8112797851562499,
+      "mean_abs_pitch_deg": 2.0491141805013022,
+      "pitch_rms_deg": 2.128984574476878,
+      "peak_abs_pitch_deg": 3.5578852891921997,
+      "mean_action_rate_l2": 3.871968790690104,
+      "mean_joint_acc_l2": 168919.02586666663,
+      "mean_torque_l2": 499.1592885416666,
+      "mean_abs_power": 100.77632213541668,
+      "fall_rate": 0.0,
+      "survival_time_s": 20.0,
+      "success_rate": 1.0,
+      "termination_counts": {
+        "time_out": 30
+      },
+      "scenario": "mass_1p20__com_x_pos0p000",
+      "label": "mass=1.2, com_x=+0.00 (nominal)",
+      "mass_scale": 1.2,
+      "com_x": 0.0,
+      "com_x_preset": "nominal",
+      "payload_audit": {
+        "base_body_name": "base",
+        "nominal_base_mass": 6.9210004806518555,
+        "applied_base_mass": 8.305200576782227,
+        "nominal_base_com": [
+          0.021111996844410896,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_base_com": [
+          0.021111996844410896,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_mass_scale_vs_nominal": 1.2,
+        "applied_com_x_delta": 0.0
+      },
+      "per_command": [
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.14353060607910156,
+          "mean_abs_roll_deg": 1.4441716918945313,
+          "mean_abs_pitch_deg": 1.6569525512695311,
+          "pitch_rms_deg": 1.7383723616600038,
+          "peak_abs_pitch_deg": 2.51293740272522,
+          "mean_action_rate_l2": 4.8881431640625,
+          "mean_joint_acc_l2": 211012.3648,
+          "mean_torque_l2": 518.263065625,
+          "mean_abs_power": 111.59370859375001,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "forward",
+          "vx": 0.8,
+          "vy": 0.0,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.25,
+            "mean_abs_roll_deg_max": 6.0,
+            "mean_abs_pitch_deg_max": 6.0,
+            "fall_rate_max": 0.05,
+            "survival_time_s_min": 18.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.1364051742553711,
+          "mean_abs_roll_deg": 1.3426683227539062,
+          "mean_abs_pitch_deg": 2.17555283203125,
+          "pitch_rms_deg": 2.297977828979492,
+          "peak_abs_pitch_deg": 4.512290811538696,
+          "mean_action_rate_l2": 3.454151806640625,
+          "mean_joint_acc_l2": 121672.83119999999,
+          "mean_torque_l2": 540.2011125,
+          "mean_abs_power": 73.40002421875,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "turn",
+          "vx": 0.4,
+          "vy": 0.0,
+          "yaw": 0.8,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.14916694335937497,
+          "mean_abs_roll_deg": 2.6469993408203125,
+          "mean_abs_pitch_deg": 2.314837158203125,
+          "pitch_rms_deg": 2.350603532791138,
+          "peak_abs_pitch_deg": 3.648427653312683,
+          "mean_action_rate_l2": 3.273611401367188,
+          "mean_joint_acc_l2": 174071.8816,
+          "mean_torque_l2": 439.0136875,
+          "mean_abs_power": 117.33523359374999,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "diagonal",
+          "vx": 0.5,
+          "vy": 0.3,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "num_episodes": 30,
+      "mean_tracking_error": 0.13914367116292317,
+      "mean_abs_roll_deg": 1.8108208333333335,
+      "mean_abs_pitch_deg": 2.7926749918619795,
+      "pitch_rms_deg": 2.8602055390675862,
+      "peak_abs_pitch_deg": 4.510135181744894,
+      "mean_action_rate_l2": 3.867906396484375,
+      "mean_joint_acc_l2": 174494.18026666666,
+      "mean_torque_l2": 493.6266989583332,
+      "mean_abs_power": 99.80512682291666,
+      "fall_rate": 0.0,
+      "survival_time_s": 20.0,
+      "success_rate": 1.0,
+      "termination_counts": {
+        "time_out": 30
+      },
+      "scenario": "mass_1p20__com_x_pos0p020",
+      "label": "mass=1.2, com_x=+0.02 (small_forward)",
+      "mass_scale": 1.2,
+      "com_x": 0.02,
+      "com_x_preset": "small_forward",
+      "payload_audit": {
+        "base_body_name": "base",
+        "nominal_base_mass": 6.9210004806518555,
+        "applied_base_mass": 8.305200576782227,
+        "nominal_base_com": [
+          0.021111996844410896,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_base_com": [
+          0.04111199826002121,
+          0.0,
+          -0.005365999881178141,
+          0.0016130266012623906,
+          0.008992232382297516,
+          -0.000844442518427968,
+          0.9999579787254333
+        ],
+        "applied_mass_scale_vs_nominal": 1.2,
+        "applied_com_x_delta": 0.020000001415610313
+      },
+      "per_command": [
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.13412323608398438,
+          "mean_abs_roll_deg": 1.4964170532226564,
+          "mean_abs_pitch_deg": 2.259837841796875,
+          "pitch_rms_deg": 2.328408360481262,
+          "peak_abs_pitch_deg": 3.282856822013855,
+          "mean_action_rate_l2": 4.893594580078125,
+          "mean_joint_acc_l2": 193715.34399999998,
+          "mean_torque_l2": 504.09537187500007,
+          "mean_abs_power": 110.12745390625,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "forward",
+          "vx": 0.8,
+          "vy": 0.0,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.25,
+            "mean_abs_roll_deg_max": 6.0,
+            "mean_abs_pitch_deg_max": 6.0,
+            "fall_rate_max": 0.05,
+            "survival_time_s_min": 18.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.13200866241455078,
+          "mean_abs_roll_deg": 1.2450085571289062,
+          "mean_abs_pitch_deg": 3.1134373291015622,
+          "pitch_rms_deg": 3.203938388824463,
+          "peak_abs_pitch_deg": 5.118038034439087,
+          "mean_action_rate_l2": 3.361407348632813,
+          "mean_joint_acc_l2": 141852.5664,
+          "mean_torque_l2": 531.3718437499999,
+          "mean_abs_power": 73.06776640625,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "turn",
+          "vx": 0.4,
+          "vy": 0.0,
+          "yaw": 0.8,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        },
+        {
+          "num_episodes": 10,
+          "mean_tracking_error": 0.15129911499023438,
+          "mean_abs_roll_deg": 2.6910368896484376,
+          "mean_abs_pitch_deg": 3.0047498046875,
+          "pitch_rms_deg": 3.0482698678970337,
+          "peak_abs_pitch_deg": 5.129510688781738,
+          "mean_action_rate_l2": 3.3487172607421867,
+          "mean_joint_acc_l2": 187914.63039999997,
+          "mean_torque_l2": 445.41288125,
+          "mean_abs_power": 116.22016015625002,
+          "fall_rate": 0.0,
+          "survival_time_s": 20.0,
+          "success_rate": 1.0,
+          "termination_counts": {
+            "time_out": 10
+          },
+          "command_name": "diagonal",
+          "vx": 0.5,
+          "vy": 0.3,
+          "yaw": 0.0,
+          "criteria": {
+            "mean_tracking_error_max": 0.35,
+            "mean_abs_roll_deg_max": 8.0,
+            "mean_abs_pitch_deg_max": 8.0,
+            "fall_rate_max": 0.1,
+            "survival_time_s_min": 16.0
+          },
+          "pass": true
+        }
+      ]
+    }
+  ],
+  "reference_scenarios": {
+    "nominal": {
+      "scenario": "mass_1p00__com_x_pos0p000",
+      "label": "mass=1.0, com_x=+0.00 (nominal)",
+      "mass_scale": 1.0,
+      "com_x": 0.0
+    },
+    "disturbed": {
+      "scenario": "mass_1p20__com_x_pos0p020",
+      "label": "mass=1.2, com_x=+0.02 (small_forward)",
+      "mass_scale": 1.2,
+      "com_x": 0.02
+    }
+  },
+  "artifacts": {
+    "mean_abs_pitch_deg_heatmap": "/home/tingjia/Project/PULSE-Locomotion/results/eval_payload/go2_pulse_flat_mean_abs_pitch_deg_heatmap.png",
+    "mean_tracking_error_heatmap": "/home/tingjia/Project/PULSE-Locomotion/results/eval_payload/go2_pulse_flat_mean_tracking_error_heatmap.png",
+    "nominal_vs_disturbed_per_command": "/home/tingjia/Project/PULSE-Locomotion/results/eval_payload/go2_pulse_flat_nominal_vs_disturbed_per_command.png"
+  },
+  "degradation_assessment": {
+    "has_degradation": true,
+    "no_collapse": true,
+    "stable_degradation": true
+  }
+}

@@ -1,0 +1,42 @@
+Task: Go2-Pulse-Flat-v0
+EnvCfg: Go2PulseFlatEnvCfg
+Policy Obs Dim: [48]
+Action Space: Box(-inf, inf, (1, 12), float32)
+Step Dt: 0.02
+Episode Length (s): 20.0
+Height Scanner: scene_enabled=False policy_obs_enabled=False
+
+Observations:
+  - [policy] base_lin_vel: dims=[3] func=isaaclab.envs.mdp.observations.base_lin_vel
+  - [policy] base_ang_vel: dims=[3] func=isaaclab.envs.mdp.observations.base_ang_vel
+  - [policy] projected_gravity: dims=[3] func=isaaclab.envs.mdp.observations.projected_gravity
+  - [policy] velocity_commands: dims=[3] func=isaaclab.envs.mdp.observations.generated_commands
+  - [policy] joint_pos: dims=[12] func=isaaclab.envs.mdp.observations.joint_pos_rel
+  - [policy] joint_vel: dims=[12] func=isaaclab.envs.mdp.observations.joint_vel_rel
+  - [policy] actions: dims=[12] func=isaaclab.envs.mdp.observations.last_action
+
+Actions:
+  - joint_pos: dim=12 type=JointPositionAction cfg={"asset_name": "robot", "joint_names": [".*"], "joint_names_expr": null, "scale": 0.25, "offset": 0.0, "use_default_offset": true, "clip": null}
+
+Rewards:
+  - track_lin_vel_xy_exp: weight=+1.5 func=isaaclab.envs.mdp.rewards.track_lin_vel_xy_exp params={"command_name": "base_velocity", "std": 0.5}
+  - track_ang_vel_z_exp: weight=+0.75 func=isaaclab.envs.mdp.rewards.track_ang_vel_z_exp params={"command_name": "base_velocity", "std": 0.5}
+  - lin_vel_z_l2: weight=-2 func=isaaclab.envs.mdp.rewards.lin_vel_z_l2 params={}
+  - ang_vel_xy_l2: weight=-0.05 func=isaaclab.envs.mdp.rewards.ang_vel_xy_l2 params={}
+  - dof_torques_l2: weight=-0.0002 func=isaaclab.envs.mdp.rewards.joint_torques_l2 params={}
+  - dof_acc_l2: weight=-2.5e-07 func=isaaclab.envs.mdp.rewards.joint_acc_l2 params={}
+  - action_rate_l2: weight=-0.01 func=isaaclab.envs.mdp.rewards.action_rate_l2 params={}
+  - feet_air_time: weight=+0.25 func=isaaclab_tasks.manager_based.locomotion.velocity.mdp.rewards.feet_air_time params={"sensor_cfg": {"name": "contact_forces", "joint_names": null, "joint_ids": "slice(None, None, None)", "fixed_tendon_names": null, "fixed_tendon_ids": "slice(None, None, None)", "body_names": [".*_foot"], "body_ids": [4, 8, 14, 18], "object_collection_names": null, "object_collection_ids": "slice(None, None, None)", "preserve_order": false}, "command_name": "base_velocity", "threshold": 0.5}
+  - flat_orientation_l2: weight=-2.5 func=isaaclab.envs.mdp.rewards.flat_orientation_l2 params={}
+  - dof_pos_limits: weight=+0 log-only func=isaaclab.envs.mdp.rewards.joint_pos_limits params={}
+  - log_base_contact: weight=+0 log-only func=isaaclab.envs.mdp.terminations.illegal_contact params={"sensor_cfg": {"name": "contact_forces", "joint_names": null, "joint_ids": "slice(None, None, None)", "fixed_tendon_names": null, "fixed_tendon_ids": "slice(None, None, None)", "body_names": ["base"], "body_ids": [0], "object_collection_names": null, "object_collection_ids": "slice(None, None, None)", "preserve_order": false}, "threshold": 1.0}
+  - log_action_rate: weight=+0 log-only func=isaaclab.envs.mdp.rewards.action_rate_l2 params={}
+  - log_joint_acc: weight=+0 log-only func=isaaclab.envs.mdp.rewards.joint_acc_l2 params={}
+  - log_joint_limits: weight=+0 log-only func=isaaclab.envs.mdp.rewards.joint_pos_limits params={}
+
+Terminations:
+  - time_out: time_out=True failure=False func=isaaclab.envs.mdp.terminations.time_out params={}
+  - base_contact: time_out=False failure=True func=isaaclab.envs.mdp.terminations.illegal_contact params={"sensor_cfg": {"name": "contact_forces", "joint_names": null, "joint_ids": "slice(None, None, None)", "fixed_tendon_names": null, "fixed_tendon_ids": "slice(None, None, None)", "body_names": ["base"], "body_ids": [0], "object_collection_names": null, "object_collection_ids": "slice(None, None, None)", "preserve_order": false}, "threshold": 1.0}
+
+Commands:
+  - base_velocity: dim=[3] type=UniformVelocityCommand heading_command=False rel_standing_envs=0.2 rel_heading_envs=0.0 ranges={"lin_vel_x": [-1.0, 1.0], "lin_vel_y": [-1.0, 1.0], "ang_vel_z": [-1.0, 1.0], "heading": [-3.141592653589793, 3.141592653589793]}

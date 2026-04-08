@@ -4,6 +4,7 @@ from isaaclab_tasks.manager_based.locomotion.velocity.config.go2.flat_env_cfg im
     UnitreeGo2FlatEnvCfg_PLAY
 )
 
+
 @configclass
 class Go2PulseFlatEnvCfg(UnitreeGo2FlatEnvCfg):
     def __post_init__(self):
@@ -14,19 +15,9 @@ class Go2PulseFlatEnvCfg(UnitreeGo2FlatEnvCfg):
         self.observations.policy.height_scan = None
         self.curriculum.terrain_levels = None
 
-        # ==========================================
-        # 命令分布修正
-        #
-        # 原因 1：heading_command=True 让 yaw 命令随时间衰减到 0，
-        #         策略永远没见过"持续恒定 yaw rate"，导致 eval OOD。
-        #         改为 False 后，yaw rate 直接从 range 采样，与 eval 一致。
-        #
-        # 原因 2：rel_standing_envs=0.02 太低，原地转圈几乎没训练过。
-        #         提高到 0.20，让 20% 的环境专门训练低速 / 原地旋转。
-        # ==========================================
-        self.commands.base_velocity.heading_command = False
-        self.commands.base_velocity.rel_standing_envs = 0.20
-        self.commands.base_velocity.rel_heading_envs = 0.0
+        self.commands.base_velocity.heading_command = True
+        self.commands.base_velocity.rel_standing_envs = 0.02
+        self.commands.base_velocity.rel_heading_envs = 1.0
 
         # ==========================================
         # 📊 监控中心 (Logging & Stats)
@@ -61,7 +52,11 @@ class Go2PulseFlatEnvCfg(UnitreeGo2FlatEnvCfg):
             weight=0.0,
         )
 
-class Go2PulseFlatEnvCfg_PLAY(UnitreeGo2FlatEnvCfg_PLAY):
+class Go2PulseFlatEnvCfg_PLAY(Go2PulseFlatEnvCfg):
     def __post_init__(self):
         super().__post_init__()
-        # FIXME:PLAY CFG
+        self.scene.num_envs = 50
+        self.scene.env_spacing = 2.5
+        self.observations.policy.enable_corruption = False
+        self.events.base_external_force_torque = None
+        self.events.push_robot = None
